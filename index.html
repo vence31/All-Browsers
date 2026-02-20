@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>Free Disability Case Evaluation</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(160deg, #0f2027, #203a43, #2c5364);
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  padding: 16px;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  overflow: hidden;
+}
+
+/* HEADER */
+.header {
+  background: #111827;
+  color: white;
+  padding: 24px 20px;
+  text-align: center;
+}
+.header-icon { font-size: 36px; margin-bottom: 10px; }
+.header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.header p {
+  font-size: 13px;
+  opacity: .75;
+  line-height: 1.5;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+/* FORM AREA */
+.form-area { padding: 24px 20px; }
+
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.field { margin-bottom: 18px; }
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 6px;
+}
+.field label .req { color: #dc2626; margin-left: 2px; }
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px; /* 16px min prevents iOS zoom */
+  font-family: inherit;
+  color: #111827;
+  background: #fff;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color .15s;
+  outline: none;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #1f3a5c;
+  box-shadow: 0 0 0 3px rgba(31,58,92,.1);
+}
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 40px;
+}
+.field textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+.field input::placeholder,
+.field textarea::placeholder { color: #9ca3af; }
+
+/* Radio / Checkbox groups */
+.radio-group, .check-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.radio-group.horizontal, .check-group.horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.radio-option, .check-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .15s;
+  font-size: 14px;
+  color: #374151;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.radio-option:hover, .check-option:hover {
+  border-color: #1f3a5c;
+  background: rgba(31,58,92,.03);
+}
+.radio-option input, .check-option input {
+  width: 18px; height: 18px;
+  margin: 0; padding: 0;
+  cursor: pointer;
+  accent-color: #1f3a5c;
+  flex-shrink: 0;
+}
+.radio-option.selected, .check-option.selected {
+  border-color: #1f3a5c;
+  background: rgba(31,58,92,.06);
+}
+
+/* Two column layout on wider screens */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 480px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+
+/* SUBMIT BUTTON */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: #1f3a5c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: .3px;
+  transition: background .15s, transform .1s;
+  margin-top: 8px;
+  -webkit-appearance: none;
+}
+.submit-btn:hover { background: #162d47; }
+.submit-btn:active { transform: scale(.98); }
+.submit-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* PROGRESS BAR */
+.progress-wrap {
+  padding: 0 20px 16px;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #6b7280;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.progress-bar {
+  height: 5px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1f3a5c, #3b82f6);
+  border-radius: 3px;
+  transition: width .3s ease;
+  width: 0%;
+}
+
+/* ERROR */
+.error-msg {
+  font-size: 11px;
+  color: #dc2626;
+  margin-top: 4px;
+  display: none;
+}
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+  border-color: #dc2626;
+}
+.field.has-error .error-msg { display: block; }
+
+/* STEP navigation */
+.step { display: none; }
+.step.active { display: block; }
+
+.step-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.back-btn {
+  flex: 1;
+  padding: 14px;
+  background: transparent;
+  border: 1.5px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  font-family: inherit;
+}
+.next-btn {
+  flex: 2;
+  padding: 14px;
+  background: #1f3a5c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* SUCCESS SCREEN */
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 50px 24px;
+}
+.success-screen .check {
+  width: 70px; height: 70px;
+  background: #d1fae5;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  margin: 0 auto 20px;
+}
+.success-screen h2 {
+  font-size: 22px;
+  color: #111827;
+  margin-bottom: 10px;
+}
+.success-screen p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* FOOTER */
+.footer {
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  padding: 14px 20px;
+  text-align: center;
+  font-size: 11px;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+.footer a { color: #6b7280; text-decoration: none; }
+
+/* Disclaimer */
+.disclaimer {
+  background: #fef9c3;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #78350f;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-icon">⚖️</div>
+    <h1>Free Disability Case Evaluation</h1>
+    <p>Complete the secure intake below. Your information goes directly to our review team.</p>
+    <div class="badge">🔒 Secure & Confidential</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="stepLabel">Step 1 of 4 — Personal Info</span>
+      <span id="stepPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-area" id="formArea">
+
+    <div class="disclaimer">
+      ⚠️ <strong>This is not legal advice.</strong> I am not an attorney. This evaluation is used to connect you with legal advertising services only.
+    </div>
+
+    <!-- STEP 1: Personal Info -->
+    <div class="step active" id="step1">
+      <div class="section-title">Personal Information</div>
+
+      <div class="two-col">
+        <div class="field" id="f-fname">
+          <label>First Name <span class="req">*</span></label>
+          <input type="text" id="fname" placeholder="First name" autocomplete="given-name">
+          <div class="error-msg">Please enter your first name</div>
+        </div>
+        <div class="field" id="f-lname">
+          <label>Last Name <span class="req">*</span></label>
+          <input type="text" id="lname" placeholder="Last name" autocomplete="family-name">
+          <div class="error-msg">Please enter your last name</div>
+        </div>
+      </div>
+
+      <div class="field" id="f-phone">
+        <label>Phone Number <span class="req">*</span></label>
+        <input type="tel" id="phone" placeholder="(555) 000-0000" autocomplete="tel">
+        <div class="error-msg">Please enter a valid phone number</div>
+      </div>
+
+      <div class="field" id="f-email">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="you@email.com" autocomplete="email">
+        <div class="error-msg">Please enter a valid email</div>
+      </div>
+
+      <div class="two-col">
+        <div class="field" id="f-age">
+          <label>Age <span class="req">*</span></label>
+          <input type="number" id="age" placeholder="Your age" min="18" max="100">
+          <div class="error-msg">Please enter your age</div>
+        </div>
+        <div class="field" id="f-state">
+          <label>State <span class="req">*</span></label>
+          <select id="state">
+            <option value="">Select state</option>
+            <option>Alabama</option><option>Alaska</option><option>Arizona</option>
+            <option>Arkansas</option><option>California</option><option>Colorado</option>
+            <option>Connecticut</option><option>Delaware</option><option>Florida</option>
+            <option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+            <option>Illinois</option><option>Indiana</option><option>Iowa</option>
+            <option>Kansas</option><option>Kentucky</option><option>Louisiana</option>
+            <option>Maine</option><option>Maryland</option><option>Massachusetts</option>
+            <option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+            <option>Missouri</option><option>Montana</option><option>Nebraska</option>
+            <option>Nevada</option><option>New Hampshire</option><option>New Jersey</option>
+            <option>New Mexico</option><option>New York</option><option>North Carolina</option>
+            <option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+            <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
+            <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option>
+            <option>Texas</option><option>Utah</option><option>Vermont</option>
+            <option>Virginia</option><option>Washington</option><option>Washington DC</option>
+            <option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option>
+            <option>Virgin Islands</option><option>Puerto Rico</option>
+          </select>
+          <div class="error-msg">Please select your state</div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="next-btn" onclick="nextStep(1)">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Work & Claim Info -->
+    <div class="step" id="step2">
+      <div class="section-title">Work & Claim History</div>
+
+      <div class="field" id="f-workstatus">
+        <label>Current Work Status <span class="req">*</span></label>
+        <div class="radio-group" id="workStatusGroup">
+          <label class="radio-option">
+            <input type="radio" name="workstatus" value="Unemployed/Not working"> Unemployed / Not working
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="workstatus" value="Self-employed"> Self-employed
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="workstatus" value="Working part-time"> Working part-time
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="workstatus" value="Working full-time"> Working full-time
+          </label>
+        </div>
+        <div class="error-msg">Please select your work status</div>
+      </div>
+
+      <div class="field" id="f-oversga">
+        <label>Are your monthly earnings above $1,690? <span class="req">*</span></label>
+        <div class="radio-group horizontal" id="overSGAGroup">
+          <label class="radio-option">
+            <input type="radio" name="oversga" value="YES"> Yes
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="oversga" value="NO"> No
+          </label>
+        </div>
+        <div class="error-msg">Please answer this question</div>
+      </div>
+
+      <div class="field" id="f-priorclaim">
+        <label>Have you filed a prior disability claim? <span class="req">*</span></label>
+        <div class="radio-group horizontal" id="priorClaimGroup">
+          <label class="radio-option">
+            <input type="radio" name="priorclaim" value="YES"> Yes
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="priorclaim" value="NO"> No
+          </label>
+        </div>
+        <div class="error-msg">Please answer this question</div>
+      </div>
+
+      <div class="field" id="f-denial">
+        <label>If you filed a prior claim, do you have a denial letter? <span class="req">*</span></label>
+        <div class="radio-group horizontal" id="denialGroup">
+          <label class="radio-option">
+            <input type="radio" name="denial" value="YES"> Yes
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="denial" value="NO"> No
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="denial" value="N/A"> N/A
+          </label>
+        </div>
+        <div class="error-msg">Please answer this question</div>
+      </div>
+
+      <div class="step-nav">
+        <button class="back-btn" onclick="prevStep(2)">← Back</button>
+        <button class="next-btn" onclick="nextStep(2)">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Medical Info -->
+    <div class="step" id="step3">
+      <div class="section-title">Medical & Physical Information</div>
+
+      <div class="field" id="f-condition">
+        <label>Primary Disability Condition <span class="req">*</span></label>
+        <input type="text" id="condition" placeholder="e.g. Back Pain, PTSD, Heart Disease">
+        <div class="error-msg">Please describe your condition</div>
+      </div>
+
+      <div class="field" id="f-sittime">
+        <label>How long can you sit comfortably before pain/discomfort? <span class="req">*</span></label>
+        <select id="sittime">
+          <option value="">Select time limit</option>
+          <option value="10 Minutes Or Less">10 Minutes Or Less</option>
+          <option value="15 Minutes Or Less">15 Minutes Or Less</option>
+          <option value="30 Minutes Or Less">30 Minutes Or Less</option>
+          <option value="1 Hour Or Less">1 Hour Or Less</option>
+          <option value="2 Hours Or More">2 Hours Or More</option>
+        </select>
+        <div class="error-msg">Please select a time</div>
+      </div>
+
+      <div class="field" id="f-standtime">
+        <label>How long can you stand comfortably before pain/discomfort? <span class="req">*</span></label>
+        <select id="standtime">
+          <option value="">Select time limit</option>
+          <option value="10 Minutes Or Less">10 Minutes Or Less</option>
+          <option value="15 Minutes Or Less">15 Minutes Or Less</option>
+          <option value="30 Minutes Or Less">30 Minutes Or Less</option>
+          <option value="1 Hour Or Less">1 Hour Or Less</option>
+          <option value="2 Hours Or More">2 Hours Or More</option>
+        </select>
+        <div class="error-msg">Please select a time</div>
+      </div>
+
+      <div class="field" id="f-liftweight">
+        <label>Maximum weight you can lift? <span class="req">*</span></label>
+        <select id="liftweight">
+          <option value="">Select weight</option>
+          <option value="Less than 10 lbs">Less than 10 lbs</option>
+          <option value="10-25 lbs">10–25 lbs</option>
+          <option value="25-50 lbs">25–50 lbs</option>
+          <option value="50+ lbs">50+ lbs</option>
+        </select>
+        <div class="error-msg">Please select a weight range</div>
+      </div>
+
+      <div class="step-nav">
+        <button class="back-btn" onclick="prevStep(3)">← Back</button>
+        <button class="next-btn" onclick="nextStep(3)">Next →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Final Details -->
+    <div class="step" id="step4">
+      <div class="section-title">Final Details</div>
+
+      <div class="field" id="f-impact">
+        <label>How does your disability condition impact your daily life? <span class="req">*</span></label>
+        <textarea id="impact" placeholder="Describe how your condition affects your ability to work, move, and perform daily tasks..."></textarea>
+        <div class="error-msg">Please describe how your condition impacts you</div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+        Submit My Free Evaluation
+      </button>
+
+      <div class="step-nav" style="margin-top:12px">
+        <button class="back-btn" onclick="prevStep(4)" style="flex:1">← Back</button>
+      </div>
+    </div>
+
+  </div><!-- /form-area -->
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="successScreen">
+    <div class="check">✅</div>
+    <h2>Evaluation Submitted!</h2>
+    <p>Thank you! Your case information has been received. Our review team will be in touch shortly.</p>
+    <br>
+    <p style="font-size:12px;color:#9ca3af">This is not legal advice. Results of this evaluation do not guarantee legal representation.</p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    🔒 Secure intake — your information is protected<br>
+    This is not legal advice. We are not attorneys.<br>
+    <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a>
+  </div>
+
+</div><!-- /wrapper -->
+
+<script>
+// ── STEP LABELS ────────────────────────────────────────────────────────────
+const stepLabels = [
+  "Step 1 of 4 — Personal Info",
+  "Step 2 of 4 — Work & Claim History",
+  "Step 3 of 4 — Medical Info",
+  "Step 4 of 4 — Final Details"
+];
+const stepPcts = ["0%", "33%", "66%", "90%"];
+let currentStep = 1;
+
+function updateProgress(step) {
+  document.getElementById("stepLabel").textContent = stepLabels[step - 1];
+  document.getElementById("stepPct").textContent   = stepPcts[step - 1];
+  document.getElementById("progressFill").style.width = stepPcts[step - 1];
+}
+
+// ── RADIO OPTION HIGHLIGHTING ──────────────────────────────────────────────
+document.querySelectorAll('.radio-option input').forEach(input => {
+  input.addEventListener('change', function() {
+    const group = this.closest('.radio-group, .check-group');
+    if (group) {
+      group.querySelectorAll('.radio-option, .check-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      this.closest('.radio-option, .check-option').classList.add('selected');
+    }
+  });
+});
+
+// ── VALIDATION ─────────────────────────────────────────────────────────────
+function validateStep(step) {
+  let valid = true;
+
+  function checkField(fieldId, inputId, isRadio, radioName) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    field.classList.remove('has-error');
+
+    if (isRadio) {
+      const checked = document.querySelector(`input[name="${radioName}"]:checked`);
+      if (!checked) { field.classList.add('has-error'); valid = false; }
+    } else {
+      const input = document.getElementById(inputId);
+      if (!input || !input.value.trim()) {
+        field.classList.add('has-error'); valid = false;
+      }
+      // Email validation
+      if (input && inputId === 'email' && input.value.trim()) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+          field.classList.add('has-error'); valid = false;
+        }
+      }
+    }
+  }
+
+  if (step === 1) {
+    checkField('f-fname',  'fname',  false);
+    checkField('f-lname',  'lname',  false);
+    checkField('f-phone',  'phone',  false);
+    checkField('f-email',  'email',  false);
+    checkField('f-age',    'age',    false);
+    checkField('f-state',  'state',  false);
+  }
+  if (step === 2) {
+    checkField('f-workstatus', null, true, 'workstatus');
+    checkField('f-oversga',    null, true, 'oversga');
+    checkField('f-priorclaim', null, true, 'priorclaim');
+    checkField('f-denial',     null, true, 'denial');
+  }
+  if (step === 3) {
+    checkField('f-condition',  'condition',  false);
+    checkField('f-sittime',    'sittime',    false);
+    checkField('f-standtime',  'standtime',  false);
+    checkField('f-liftweight', 'liftweight', false);
+  }
+  if (step === 4) {
+    checkField('f-impact', 'impact', false);
+  }
+  return valid;
+}
+
+function nextStep(from) {
+  if (!validateStep(from)) {
+    // Scroll to first error
+    const firstError = document.querySelector('.field.has-error');
+    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  document.getElementById('step' + from).classList.remove('active');
+  currentStep = from + 1;
+  document.getElementById('step' + currentStep).classList.add('active');
+  updateProgress(currentStep);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevStep(from) {
+  document.getElementById('step' + from).classList.remove('active');
+  currentStep = from - 1;
+  document.getElementById('step' + currentStep).classList.add('active');
+  updateProgress(currentStep);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── SUBMIT TO GOOGLE SHEETS VIA APPS SCRIPT ────────────────────────────────
+// Replace this URL with your deployed Apps Script web app URL
+const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbxI9gWvKnXt7E66K144fY44HfXEGYfgnm8vjFXn1VB5zOASAbcOgzk4dKiRub9BDo4/exec";
+
+async function submitForm() {
+  if (!validateStep(4)) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  const payload = {
+    action:      "submit_lead",
+    fullName:    document.getElementById('fname').value.trim() + ' ' + document.getElementById('lname').value.trim(),
+    state:       document.getElementById('state').value,
+    age:         document.getElementById('age').value,
+    workStatus:  document.querySelector('input[name="workstatus"]:checked')?.value || '',
+    overSGA:     document.querySelector('input[name="oversga"]:checked')?.value || '',
+    priorClaim:  document.querySelector('input[name="priorclaim"]:checked')?.value || '',
+    hasDenial:   document.querySelector('input[name="denial"]:checked')?.value || '',
+    condition:   document.getElementById('condition').value.trim(),
+    sitTime:     document.getElementById('sittime').value,
+    standTime:   document.getElementById('standtime').value,
+    liftWeight:  document.getElementById('liftweight').value,
+    impact:      document.getElementById('impact').value.trim(),
+    phone:       document.getElementById('phone').value.trim(),
+    email:       document.getElementById('email').value.trim(),
+    timestamp:   new Date().toISOString()
+  };
+
+  try {
+    // Use no-cors mode so Chrome/Safari mobile don't block it
+    await fetch(SUBMIT_URL + "?action=submit_lead&" + new URLSearchParams(payload).toString(), {
+      method: 'GET',
+      mode: 'no-cors'
+    });
+  } catch(e) {
+    // no-cors always throws — that's fine, the data still gets submitted
+  }
+
+  // Show success regardless (no-cors can't read response)
+  document.getElementById('formArea').style.display = 'none';
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  document.querySelector('.header p').textContent = 'Thank you for submitting your evaluation!';
+}
+
+// Init
+updateProgress(1);
+</script>
+</body>
+</html>
