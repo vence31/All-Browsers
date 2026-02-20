@@ -533,7 +533,10 @@ function updateScore(){
   else if (age > 0)   s += 1;
 
   // ── FACTOR 2: WORK STATUS (max 25 pts) ───────────────────────────────────
-  const work    = document.querySelector('input[name="workstatus"]:checked')?.value?.toLowerCase() || '';
+  // Work status is not a selectable field on this form — all claimants submit
+  // as "Unemployed/Not working" (hardcoded in submitForm payload).
+  // Score meter must use the same value so intake and dashboard always match.
+  const work    = document.querySelector('input[name="workstatus"]:checked')?.value?.toLowerCase() || 'unemployed/not working';
   const overSGA = document.querySelector('input[name="oversga"]:checked')?.value || 'NO';
   if (work.includes('unemployed') || work.includes('not working')) {
     s += 25;
